@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
             return RoleDTO.builder()
                     .rolId(role.getRolId())
                     .rolDescription(role.getRolDescription())
-                    .rol(role.getRol())
+                    .role(role.getRole())
                     .status(role.isStatus())
                     .build();
         }
@@ -102,22 +103,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // Convierte UserDTO a UserEntity
-    public UserEntity setDTOToEntity(UserDTO userParam) {
-        if (userParam == null) {
-            return null; // Manejo de nulos
-        }
 
-        UserEntity dto = new UserEntity();
-        dto.setUserId(userParam.getUserId()); // Asegúrate de que este campo exista en UserDTO
-        dto.setUserName(userParam.getUserName());
-        dto.setEmail(userParam.getEmail());
 
-        // Si tienes un rol y una persona en el DTO, puedes establecerlos aquí también
-        // dto.setRole(setRoleToEntity(userParam.getRole()));
-        // dto.setPerson(setPersonToEntity(userParam.getPerson()));
-
-        return dto;
-    }
 
 }

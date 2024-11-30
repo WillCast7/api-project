@@ -20,4 +20,15 @@ public class constants {
         public static final String updateError = "Error al intentar actualizar";
         public static final String findError = "Error al intentar buscar";
     }
+    public static class descriptions {
+        public static final String superUser = "Este rol tiene permisos globales sobre toda la aplicación";
+        public static final String admin = "Este rol tiene privilegios elevados";
+        public static final String supervisor = "Este rol esta mas enfocado en reportes y metricas";
+        public static final String operativeUser = "Usuario operativo con capacidad de gestionar turnos";
+        public static final String digiter = "Este rol solo ingresará datos ";
+    }
+
+    public static class uitlLogs{
+        public static final String separator = " ----------------------------------------------------------------- ";
+    }
 }

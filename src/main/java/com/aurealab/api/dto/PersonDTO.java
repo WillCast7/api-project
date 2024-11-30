@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -33,6 +34,6 @@ public class PersonDTO {
 
     private String address;
 
-    private Date birthDate;
+    private LocalDate birthDate;
 
 }

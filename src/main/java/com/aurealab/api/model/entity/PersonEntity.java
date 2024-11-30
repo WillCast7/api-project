@@ -1,11 +1,14 @@
 package com.aurealab.api.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
+@Builder
 @Data
 @Table(name = "persons")
 public class PersonEntity {
@@ -26,5 +29,5 @@ public class PersonEntity {
     private String address;
 
     @Column(name = "birth")
-    private Date birthDate;
+    private LocalDate birthDate;
 }

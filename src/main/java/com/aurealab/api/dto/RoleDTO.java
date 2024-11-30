@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class RoleDTO {
     private Long rolId;
-    private String rol;
+    private String role;
     private String rolDescription;
     private boolean status;
 }
