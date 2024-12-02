@@ -45,7 +45,6 @@ public class TemplateServiceImpl implements TemplateService {
         log.info(constants.uitlLogs.separator);
 
         try {
-            permissionCreation();
             rolesCreation();
             userTemplateCreation();
         } catch (Exception error) {
@@ -66,11 +65,11 @@ public class TemplateServiceImpl implements TemplateService {
 
         Set<RolesEntity> roles = new HashSet<>((Collection) roleRepository.findAll());
 
-        createUser("willcast", "williamisrael210@gmail.com", "12345678",
+        createUser("willcast", "williamisrael210@gmail.com", "$2a$10$UWoUgwri.XXA.LGiHtGO3uinblEmzsCDkvW4eFZDSi.5fQW988S1a",//AureaLab1994**
                 "William", "Castaño", "1143969222", "Cali - Valle del Cauca", LocalDate.of(1994, 10, 5),
                 findRoleByName(roles, "SUPERUSER"));
 
-        createUser("admin", "admin@gmail.com", "12345678",
+        createUser("admin", "admin@gmail.com", "$2a$10$Nal2kboXo4QSqwbNt3jdS.Hkg7CDSLLqg6zRhABrMZdu.vv1K/bO.",//12345678
                 "administrador", "AureaLab", "1234567890", "Cali - La Buitrera", LocalDate.of(2024, 12, 2),
                 findRoleByName(roles, "ADMIN"));
     }
@@ -104,6 +103,10 @@ public class TemplateServiceImpl implements TemplateService {
                 .password(password)
                 .person(person)
                 .role(role)
+                .accountNotLocked(true)
+                .credentialNotExpired(true)
+                .accountNotExpired(true)
+                .isEnable(true)
                 .build();
 
         userRepository.save(user);
@@ -117,46 +120,31 @@ public class TemplateServiceImpl implements TemplateService {
                 .orElse(null);
     }
 
-    public void permissionCreation() {
-        log.info(constants.uitlLogs.separator);
-        log.info("Creating Permissions");
-        createPermissionIfNotExists("READ");
-        createPermissionIfNotExists("CREATE");
-        createPermissionIfNotExists("UPDATE");
-        createPermissionIfNotExists("SUPERUSER");
-    }
-
-    /**
-     * validate if permission exists; if it doesn't, it'll be created
-     * @param name name of permission
-     */
-    private void createPermissionIfNotExists(String name) {
-        if (Objects.equals(permissionRepository.findByName(name), null)) {
-            PermissionEntity permission = PermissionEntity.builder()
-                    .name(name)
-                    .build();
-            permissionRepository.save(permission);
-            log.info("Created permission: {}", name);
-        }
-    }
-
     public void rolesCreation() {
         log.info(constants.uitlLogs.separator);
+        log.info("Generating in memory Permissions");
+        PermissionEntity read = PermissionEntity.builder()
+                .name("READ")
+                .build();
+        PermissionEntity create = PermissionEntity.builder()
+                .name("CREATE")
+                .build();
+        PermissionEntity update = PermissionEntity.builder()
+                .name("UPDATE")
+                .build();
+        PermissionEntity superUser = PermissionEntity.builder()
+                .name("SUPERUSER")
+                .build();
+
+        log.info(constants.uitlLogs.separator);
         log.info("Creating Roles");
-        Set<PermissionEntity> permissions = new HashSet<>(((Collection<PermissionEntity>) permissionRepository.findAll()));
 
         //All permissions
-        createRoleIfNotExists("SUPERUSER", permissions, "Super Usuario", constants.descriptions.superUser);
-
-        //WithOut superUser permission
-        permissions.removeIf(permission -> "SUPERUSER".equals(permission.getName())); //quit superuser permission
-        createRoleIfNotExists("ADMIN", permissions, "Administrador", constants.descriptions.admin);
-        createRoleIfNotExists("SUPERVISOR", permissions, "Supervisor", constants.descriptions.supervisor);
-
-        //WithOut Update permission
-        permissions.removeIf(permission -> "UPDATE".equals(permission.getName())); //quit update permission
-        createRoleIfNotExists("OPERATIVEUSER", permissions, "Usuario operativo", constants.descriptions.operativeUser);
-        createRoleIfNotExists("DIGITER", permissions, "Digitador", constants.descriptions.digiter);
+        createRoleIfNotExists("SUPERUSER", Set.of(read,create,update,superUser), "Super Usuario", constants.descriptions.superUser);
+        createRoleIfNotExists("ADMIN", Set.of(read,create,update), "Administrador", constants.descriptions.admin);
+        createRoleIfNotExists("SUPERVISOR", Set.of(read,create,update), "Supervisor", constants.descriptions.supervisor);
+        createRoleIfNotExists("OPERATIVEUSER", Set.of(read,create), "Usuario operativo", constants.descriptions.operativeUser);
+        createRoleIfNotExists("DIGITER", Set.of(read,create), "Digitador", constants.descriptions.digiter);
 
     }
 
@@ -174,7 +162,7 @@ public class TemplateServiceImpl implements TemplateService {
                 .status(true)
                 .rolDescription(description)
                 .roleName(rolName)
-                .perrmissionLst(permissions)
+                .perrmissionList(permissions)
                 .build());
             log.info("Created role: {}", rolName);
         }

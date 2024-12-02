@@ -2,22 +2,24 @@ package com.aurealab.api.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Builder
 @Data
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(unique = true)
     private String email;
@@ -43,11 +45,10 @@ public class UserEntity {
     @Column(name = "account_not_expired")
     private boolean accountNotExpired;
 
-    @Column(name = "account_no_locked")
-    private boolean accountNoLocked;
+    @Column(name = "account_not_locked")
+    private boolean accountNotLocked;
 
-    @Column(name = "account_no_expired")
-    private boolean credentialNoExpired;
-
+    @Column(name = "credential_not_expired")
+    private boolean credentialNotExpired;
 
 }

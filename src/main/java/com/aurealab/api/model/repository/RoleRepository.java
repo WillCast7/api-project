@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface RoleRepository extends CrudRepository<RolesEntity, Long> {
-    @Transactional
+
     @Query("SELECT re FROM RolesEntity re WHERE re.role = :role")
     RolesEntity findByName(String role);
 }

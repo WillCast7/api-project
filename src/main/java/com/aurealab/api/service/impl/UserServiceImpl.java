@@ -10,6 +10,7 @@ import com.aurealab.api.model.entity.UserEntity;
 import com.aurealab.api.model.repository.UserRepository;
 import com.aurealab.api.service.UserService;
 import com.aurealab.api.util.constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -63,7 +66,7 @@ public class UserServiceImpl implements UserService {
             RoleDTO dtRole = setRoleToDTO(userParam.getRole());
 
             return UserDTO.builder()
-                    .userId(userParam.getUserId())
+                    .userId(userParam.getId())
                     .userName(userParam.getUserName())
                     .email(userParam.getEmail())
                     .person(dtPerson)
@@ -100,6 +103,14 @@ public class UserServiceImpl implements UserService {
                     .phoneNumber(person.getPhoneNumber())
                     .birthDate(person.getBirthDate())
                     .build();
+        }
+    }
+
+    public void searchName(){
+
+        Optional<UserEntity> userEntity = userRepository.findUserEntityByUserName("willcast");
+        if(userEntity.isPresent()){
+            log.info("usuario por nombre: {}", userEntity);
         }
     }
 

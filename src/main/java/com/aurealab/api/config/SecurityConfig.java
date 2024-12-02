@@ -1,5 +1,6 @@
 package com.aurealab.api.config;
 
+import com.aurealab.api.service.impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,20 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http ->{
-                /* endpoints permissions */
-                    //methods permission
-                    http.requestMatchers(HttpMethod.GET).hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST).hasAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.PUT).hasAuthority("UPDATE");
-                    http.requestMatchers(HttpMethod.PATCH).hasAuthority("UPDATE");
-                    http.requestMatchers(HttpMethod.DELETE).hasAuthority("SUPERUSER");
-                    //endpoints
-                    http.anyRequest().denyAll();
-                })
                 .build();
     }
 
@@ -53,26 +44,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider(UserDetailServiceImpl userDetailService){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
+        provider.setUserDetailsService(userDetailService);
         return provider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        UserDetails userDetails = User.withUsername("will")
-                .password("12345")
-                .roles("ADMIN")
-                .authorities("READ", "CREATE")
-                .build();
-        return new InMemoryUserDetailsManager(userDetails);
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        //TODO falta encriptar la pass
-        return NoOpPasswordEncoder.getInstance(); //new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder();
     }
+
 }
