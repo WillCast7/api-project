@@ -19,6 +19,13 @@ public class constants {
         public static final String saveError = "Error al intentar crear";
         public static final String updateError = "Error al intentar actualizar";
         public static final String findError = "Error al intentar buscar";
+        public static final String routeNotFound = "Error, ruta no encontrada";
+        public static final String handlerException = "Ocurrió un error inesperado.";
+        public static final String errorCreatingToken = "Ocurrió un error al crear el token";
+        public static final String internalServerError = "INTERNAL_SERVER_ERROR";
+        public static final String tokenCreationError = "TOKEN_CREATION_ERROR";
+        public static final String tokenValidationError = "Token invalido, No autorizado.";
+        public static final String unespectedError = "Error inesperado ";
     }
     public static class descriptions {
         public static final String superUser = "Este rol tiene permisos globales sobre toda la aplicación";

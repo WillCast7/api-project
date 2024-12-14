@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface UserService {
     public APIResponseDTO<List<UserDTO>> getUsers(int itemsPerPage, int activePage);
-    public void searchName();
 }

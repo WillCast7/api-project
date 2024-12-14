@@ -1,6 +1,8 @@
 package com.aurealab.api.config;
 
+import com.aurealab.api.config.filter.JwtTokenValidator;
 import com.aurealab.api.service.impl.UserDetailServiceImpl;
+import com.aurealab.api.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +25,15 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -35,6 +41,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(http ->{
+                    http.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
+                    http.requestMatchers(HttpMethod.GET).hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.POST).hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PATCH).hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.PUT).hasAuthority("UPDATE");
+                    http.anyRequest().denyAll();
+                })
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 

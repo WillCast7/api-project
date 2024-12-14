@@ -106,15 +106,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public void searchName(){
-
-        Optional<UserEntity> userEntity = userRepository.findUserEntityByUserName("willcast");
-        if(userEntity.isPresent()){
-            log.info("usuario por nombre: {}", userEntity);
-        }
-    }
-
-
-
-
 }
