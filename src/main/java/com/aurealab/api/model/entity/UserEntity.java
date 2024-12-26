@@ -34,9 +34,8 @@ public class UserEntity {
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private PersonEntity person;
 
-    // Cambiar a ManyToOne para reflejar que un usuario tiene un solo rol
-    @ManyToOne(fetch = FetchType.EAGER) // Puedes ajustar el tipo de carga según tus necesidades
-    @JoinColumn(name = "role_id") // Clave foránea que apunta a RolesEntity
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
     private RolesEntity role;
 
     @Column(name = "is_enable")

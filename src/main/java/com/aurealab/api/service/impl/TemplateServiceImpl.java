@@ -1,9 +1,7 @@
 package com.aurealab.api.service.impl;
 
-import com.aurealab.api.model.entity.PermissionEntity;
-import com.aurealab.api.model.entity.PersonEntity;
-import com.aurealab.api.model.entity.RolesEntity;
-import com.aurealab.api.model.entity.UserEntity;
+import com.aurealab.api.model.entity.*;
+import com.aurealab.api.model.repository.MenuRepository;
 import com.aurealab.api.model.repository.PermissionRepository;
 import com.aurealab.api.model.repository.RoleRepository;
 import com.aurealab.api.model.repository.UserRepository;
@@ -15,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -32,6 +27,9 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    MenuRepository menuRepository;
 
     /**
      * Principal function for data template creation
@@ -47,6 +45,7 @@ public class TemplateServiceImpl implements TemplateService {
         try {
             rolesCreation();
             userTemplateCreation();
+            menusCreation();
         } catch (Exception error) {
             log.error("Error: ", error);
             response = constants.errors.saveError;
@@ -140,11 +139,11 @@ public class TemplateServiceImpl implements TemplateService {
         log.info("Creating Roles");
 
         //All permissions
-        createRoleIfNotExists("SUPERUSER", Set.of(read,create,update,superUser), "Super Usuario", constants.descriptions.superUser);
-        createRoleIfNotExists("ADMIN", Set.of(read,create,update), "Administrador", constants.descriptions.admin);
-        createRoleIfNotExists("SUPERVISOR", Set.of(read,create,update), "Supervisor", constants.descriptions.supervisor);
-        createRoleIfNotExists("OPERATIVEUSER", Set.of(read,create), "Usuario operativo", constants.descriptions.operativeUser);
-        createRoleIfNotExists("DIGITER", Set.of(read,create), "Digitador", constants.descriptions.digiter);
+        createRoleIfNotExists("SUPERUSER", Set.of(read,create,update,superUser), "Super Usuario", constants.roleDescriptions.superUser);
+        createRoleIfNotExists("ADMIN", Set.of(read,create,update), "Administrador", constants.roleDescriptions.admin);
+        createRoleIfNotExists("SUPERVISOR", Set.of(read,create,update), "Supervisor", constants.roleDescriptions.supervisor);
+        createRoleIfNotExists("OPERATIVEUSER", Set.of(read,create), "Usuario operativo", constants.roleDescriptions.operativeUser);
+        createRoleIfNotExists("DIGITER", Set.of(read,create), "Digitador", constants.roleDescriptions.digiter);
 
     }
 
@@ -166,5 +165,35 @@ public class TemplateServiceImpl implements TemplateService {
                 .build());
             log.info("Created role: {}", rolName);
         }
+    }
+
+    private void menusCreation(){
+        log.info(constants.uitlLogs.separator);
+        log.info("Creating Menus");
+        Iterable<RolesEntity> rolesIterable = roleRepository.findAll();
+
+        //Convert the rolesIterable of iterable type to a rolesList of a set type
+        Set<RolesEntity> rolesList = new HashSet<>((Collection<? extends RolesEntity>) rolesIterable);
+
+        log.info("Be will created the menu");
+        //creation of the menus
+        createMenu("Asesores", "Administracion", "/administracion/asesores", 1, ".", rolesList);
+        createMenu("Usuarios", "Administracion", "/administracion/usuarios", 1, ".", rolesList);
+        createMenu("Mi cuenta", "Configuracion", "/configuracion/micuenta", 1, ".", rolesList);
+        createMenu("Mi CDA", "Configuracion", "/configuracion/micda", 1, ".", rolesList);
+
+    }
+
+    private void createMenu(String name, String father, String route, int orderMenu, String icon, Set<RolesEntity> roles){
+         menuRepository.save(MenuItemEntity.builder()
+                .name(name)
+                .father(father)
+                .route(route)
+                .orderMenu(orderMenu)
+                .icon(icon)
+                .roles(roles)
+                .build()
+         );
+        log.info("Created the item Menu: {}", name + " of " + father);
     }
 }

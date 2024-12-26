@@ -26,8 +26,9 @@ public class constants {
         public static final String tokenCreationError = "TOKEN_CREATION_ERROR";
         public static final String tokenValidationError = "Token invalido, No autorizado.";
         public static final String unespectedError = "Error inesperado ";
+        public static final String invalidUserOrPass = "Usuario o contraseña invalido";
     }
-    public static class descriptions {
+    public static class roleDescriptions {
         public static final String superUser = "Este rol tiene permisos globales sobre toda la aplicación";
         public static final String admin = "Este rol tiene privilegios elevados";
         public static final String supervisor = "Este rol esta mas enfocado en reportes y metricas";

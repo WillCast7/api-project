@@ -5,6 +5,8 @@ import com.aurealab.api.dto.LoginRequest;
 import com.aurealab.api.model.entity.UserEntity;
 import com.aurealab.api.model.repository.UserRepository;
 import com.aurealab.api.util.JwtUtils;
+import com.aurealab.api.util.constants;
+import com.aurealab.api.util.exceptions.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -46,7 +48,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     log.info("starting the user detail service of: {}", username);
 
         UserEntity userEntity = userRepository.findUserEntityByUserName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe."));
+                .orElseThrow(() -> new BaseException("El usuario " + username + " no existe.", constants.errors.invalidUserOrPass) {
+                });
 
         log.info("finish the user detail service");
 

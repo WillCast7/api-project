@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/login")
 public class authController {
 
     @Autowired
     UserDetailServiceImpl userDetailService;
 
-    @PostMapping("/login")
+    @PostMapping
     APIResponseDTO<AuthResponse> login(@RequestBody @Valid LoginRequest userRequest){
-
         return APIResponseDTO.success(this.userDetailService.loginUser(userRequest), "Todo melo", "200");
     }
 

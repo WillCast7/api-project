@@ -29,11 +29,12 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     }
 
     /**
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws ServletException
-     * @throws IOException
+     * Token validation
+     * @param request The incoming HTTP request
+     * @param response HTTP response to be sent to the client.
+     * @param filterChain The filter chain through which the request and response must be passed.
+     * @throws ServletException If an error occurs during servlet processing.
+     * @throws IOException If an input/output error occurs during processing.
      */
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +35,14 @@ public class RolesEntity {
     @JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<PermissionEntity> perrmissionList = new HashSet<>();
 
-    // Relación inversa: Un rol puede ser asignado a muchos usuarios
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY) // Cambiar a OneToMany
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Set<UserEntity> users = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+        name = "menu_roles",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "menu_id")
+    )
+    private Set<MenuItemEntity> menus;
 }

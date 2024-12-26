@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -37,12 +35,12 @@ public class UserServiceImpl implements UserService {
         final Pageable pageable = PageRequest.of(activePage, itemPerPage);
         try {
             users = userRepository.findAll(pageable);
-            if (users.hasContent()) { // Verifica si hay contenido
+            if (users.hasContent()) {
                 List<UserDTO> dtoList = new ArrayList<>();
-                UserMapper userMapper = new UserMapper(); // Instancia del mapeador
+                UserMapper userMapper = new UserMapper();
 
                 for (UserEntity user : users) {
-                    dtoList.add(userMapper.setEntityToDTO(user)); // Usa el método correcto
+                    dtoList.add(userMapper.setEntityToDTO(user));
                 }
                 response = APIResponseDTO.withPageable(dtoList, constants.messages.consultGood, "200", users.getPageable());
             } else {
@@ -56,10 +54,9 @@ public class UserServiceImpl implements UserService {
 
     public class UserMapper {
 
-        // Convierte UserEntity a UserDTO
         public UserDTO setEntityToDTO(UserEntity userParam) {
             if (userParam == null) {
-                return null; // Manejo de nulos
+                return null;
             }
 
             PersonDTO dtPerson = setPersonToDTO(userParam.getPerson());
@@ -74,10 +71,10 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
-        // Convierte RolesEntity a RoleDTO
+        // RolesEntity to RoleDTO conversion
         public RoleDTO setRoleToDTO(RolesEntity role) {
             if (role == null) {
-                return null; // Manejo de nulos
+                return null;
             }
 
             return RoleDTO.builder()
@@ -88,17 +85,17 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
-        // Convierte PersonEntity a PersonDTO
+        // PersonEntity to PersonDTO conversion
         public PersonDTO setPersonToDTO(PersonEntity person) {
             if (person == null) {
-                return null; // Manejo de nulos
+                return null;
             }
 
             return PersonDTO.builder()
                     .personId(person.getPersonId())
                     .dni(person.getDni())
                     .names(person.getNames())
-                    .surNames(person.getSurnames()) // Asegúrate que este campo sea correcto
+                    .surNames(person.getSurnames())
                     .address(person.getAddress())
                     .phoneNumber(person.getPhoneNumber())
                     .birthDate(person.getBirthDate())
