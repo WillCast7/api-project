@@ -88,11 +88,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public Authentication authenticate(String username, String password){
         UserDetails userDetails = this.loadUserByUsername(username);
         if (userDetails == null){
-            throw new BadCredentialsException("invalid username or password");
+            throw new BaseException(constants.errors.invalidUserOrPass, constants.errors.invalidUserOrPass){};
         }
 
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("invalid username or password");
+            throw new BaseException(constants.errors.invalidUserOrPass, constants.errors.invalidUserOrPass){};
         }
 
         return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());

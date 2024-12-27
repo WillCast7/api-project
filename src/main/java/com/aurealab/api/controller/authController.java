@@ -4,6 +4,7 @@ import com.aurealab.api.dto.APIResponseDTO;
 import com.aurealab.api.dto.AuthResponse;
 import com.aurealab.api.dto.LoginRequest;
 import com.aurealab.api.service.impl.UserDetailServiceImpl;
+import com.aurealab.api.util.constants;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class authController {
 
     @PostMapping
     APIResponseDTO<AuthResponse> login(@RequestBody @Valid LoginRequest userRequest){
-        return APIResponseDTO.success(this.userDetailService.loginUser(userRequest), "Todo melo", "200");
+        return APIResponseDTO.success(this.userDetailService.loginUser(userRequest), constants.success.overedSuccess, "200");
     }
 
 }
