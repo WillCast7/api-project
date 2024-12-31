@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -103,4 +104,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    public APIResponseDTO<UserDTO> getUser(Long id) {
+        APIResponseDTO<UserDTO> response;
+        Optional<UserEntity> userOptional = userRepository.findById(id);
+
+        UserDTO userDTO = null;
+        if (userOptional.isPresent()) {
+            UserMapper userMapper = new UserMapper();
+            userDTO = userMapper.setEntityToDTO(userOptional.get());
+            response = APIResponseDTO.success(userDTO, constants.messages.consultGood, "200");
+        }else{
+            response = APIResponseDTO.failure(constants.messages.dontFoundByID, "400", constants.messages.dontFoundByID);
+        }
+
+        return response;
+    }
 }

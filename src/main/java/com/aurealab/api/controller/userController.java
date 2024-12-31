@@ -19,10 +19,14 @@ public class userController {
 
 
     @GetMapping(produces = "application/json")
-    @PreAuthorize("hasAuthority('READ')")
     public APIResponseDTO<List<UserDTO>> getUsers(@RequestParam(defaultValue = "10") int itemsPerPage,
                                                   @RequestParam(defaultValue = "0") int activePage) {
         return userService.getUsers(itemsPerPage, activePage);
+    }
+
+    @GetMapping(value = "/{id}" ,produces = "application/json")
+    public APIResponseDTO<UserDTO> getUser(@PathVariable Long id) {
+        return userService.getUser(id);
     }
 
     @PostMapping(produces = "application/json")
