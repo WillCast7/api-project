@@ -52,7 +52,7 @@ public class APIResponseDTO<T> implements Serializable {
 				.state(false)
 				.message(message)
 				.error(error)
-				.timestamp(LocalDateTime.now().toString()) // Se establece aquí también
+				.timestamp(LocalDateTime.now().toString())
 				.code(code)
 				.data(Optional.empty())
 				.build();

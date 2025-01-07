@@ -3,6 +3,7 @@ package com.aurealab.api.controller;
 import com.aurealab.api.dto.APIResponseDTO;
 import com.aurealab.api.dto.UserDTO;
 import com.aurealab.api.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,8 @@ public class userController {
     }
 
     @PostMapping(produces = "application/json")
-    public APIResponseDTO<List<UserDTO>> postUsers(@RequestParam(defaultValue = "10") int itemsPerPage,
-                                                  @RequestParam(defaultValue = "0") int activePage) {
-        return userService.getUsers(itemsPerPage, activePage);
+    public APIResponseDTO<String> postUsers(@Valid @RequestBody UserDTO user) {
+        return userService.saveUser(user);
     }
 
     @PutMapping(produces = "application/json")

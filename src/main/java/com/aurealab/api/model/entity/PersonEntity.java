@@ -27,7 +27,7 @@ public class PersonEntity {
 
     private String surnames;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phoneNumber;
 
     private String address;

@@ -27,6 +27,7 @@ public class constants {
         public static final String tokenValidationError = "Token invalido, No autorizado.";
         public static final String unespectedError = "Error inesperado ";
         public static final String invalidUserOrPass = "Usuario o contraseña invalido";
+        public static final String dataPersistenceError = "Datos duplicados";
     }
     public static class roleDescriptions {
         public static final String superUser = "Este rol tiene permisos globales sobre toda la aplicación";

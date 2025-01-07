@@ -17,5 +17,6 @@ public class RoleDTO {
     private Long rolId;
     private String role;
     private String rolDescription;
+    private String roleName;
     private boolean status;
 }
