@@ -60,9 +60,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>11.2.0.jre8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -102,7 +102,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.4.11</version> <!-- Última versión estable -->
+			<version>1.4.11</version>
 		</dependency>
 
 		<dependency>
