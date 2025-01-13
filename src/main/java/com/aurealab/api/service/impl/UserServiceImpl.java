@@ -20,6 +20,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,9 +38,8 @@ public class UserServiceImpl implements UserService {
     @Value("${security.users.defaultpass}")
     private String defaultPass;
 
-    public APIResponseDTO<List<UserDTO>> getUsers(int itemPerPage, int activePage) {
+    public ResponseEntity<APIResponseDTO<List<UserDTO>>> getUsers(int itemPerPage, int activePage) {
 
-        APIResponseDTO<List<UserDTO>> response;
         Page<UserEntity> users;
 
         final Pageable pageable = PageRequest.of(activePage, itemPerPage);
@@ -51,14 +52,14 @@ public class UserServiceImpl implements UserService {
                 for (UserEntity user : users) {
                     dtoList.add(userMapper.setEntityToDTO(user));
                 }
-                response = APIResponseDTO.withPageable(dtoList, constants.messages.consultGood, "200", users.getPageable());
+                return ResponseEntity.ok(APIResponseDTO.withPageable(dtoList, constants.messages.consultGood, users.getPageable()));
             } else {
-                response = APIResponseDTO.failure(constants.messages.noData, "400", "vacio");
+                return ResponseEntity.ofNullable(APIResponseDTO.failure(constants.messages.noData, "vacio"));
             }
         } catch (Exception e) {
-            response = APIResponseDTO.failure(constants.errors.findError + " los usuarios", "500", e.getMessage());
+            return ResponseEntity.badRequest().body(APIResponseDTO.failure(constants.errors.findError + " los usuarios", e.getMessage()));
         }
-        return response;
+
     }
 
     public class UserMapper {
@@ -169,24 +170,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public APIResponseDTO<UserDTO> getUser(Long id) {
-        APIResponseDTO<UserDTO> response;
+    public ResponseEntity<APIResponseDTO<UserDTO>> getUser(Long id) {
         Optional<UserEntity> userOptional = userRepository.findById(id);
 
         UserDTO userDTO = null;
         if (userOptional.isPresent()) {
             UserMapper userMapper = new UserMapper();
             userDTO = userMapper.setEntityToDTO(userOptional.get());
-            response = APIResponseDTO.success(userDTO, constants.messages.consultGood, "200");
+            return ResponseEntity.ok().body(APIResponseDTO.success(userDTO, constants.messages.consultGood));
         } else {
-            response = APIResponseDTO.failure(constants.messages.dontFoundByID, "400", constants.messages.dontFoundByID);
+            return ResponseEntity.ofNullable(APIResponseDTO.failure(constants.messages.dontFoundByID, constants.messages.dontFoundByID));
         }
-
-        return response;
     }
 
-    public APIResponseDTO<String> saveUser(UserDTO user) {
-        APIResponseDTO<String> response;
+    public ResponseEntity<APIResponseDTO<String>> saveUser(UserDTO user) {
         UserEntity userEntity;
 
         try {
@@ -196,7 +193,7 @@ public class UserServiceImpl implements UserService {
 
             log.info("Usuario guardado: {}", userEntity.getUserName());
 
-            response = APIResponseDTO.success(constants.success.savedSuccess, "200", constants.success.savedSuccess);
+            return ResponseEntity.ok().body(APIResponseDTO.success(constants.success.savedSuccess, constants.success.savedSuccess));
 
         } catch (DataIntegrityViolationException e) {
             String exceptionMessage = "Ya existe un usuario con ese ";
@@ -216,8 +213,20 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(constants.errors.saveError, constants.errors.internalServerError, e) {
             };
         }
-
-        return response;
     }
 
+    public ResponseEntity<APIResponseDTO<String>> updateUser(UserDTO user, Long id){
+        APIResponseDTO response;
+        try{
+            if(true){
+                return ResponseEntity.status(HttpStatus.OK).body(APIResponseDTO.success(null, "modificado exitosamente"));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(APIResponseDTO.success(null, "modificado exitosamente"));
+
+        }catch (Exception e) {
+            log.error("error : {}" + e);
+            throw new BaseException(constants.errors.saveError, constants.errors.internalServerError, e) {
+            };
+        }
+    }
 }

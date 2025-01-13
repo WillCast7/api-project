@@ -7,6 +7,7 @@ import com.aurealab.api.service.impl.UserDetailServiceImpl;
 import com.aurealab.api.util.constants;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,8 +18,8 @@ public class authController {
     UserDetailServiceImpl userDetailService;
 
     @PostMapping
-    APIResponseDTO<AuthResponse> login(@RequestBody @Valid LoginRequest userRequest){
-        return APIResponseDTO.success(this.userDetailService.loginUser(userRequest), constants.success.overedSuccess, "200");
+    ResponseEntity<APIResponseDTO<AuthResponse>> login(@RequestBody @Valid LoginRequest userRequest){
+        return userDetailService.loginUser(userRequest);
     }
 
 }

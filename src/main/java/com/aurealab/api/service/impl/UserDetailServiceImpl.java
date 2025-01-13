@@ -1,5 +1,6 @@
 package com.aurealab.api.service.impl;
 
+import com.aurealab.api.dto.APIResponseDTO;
 import com.aurealab.api.dto.AuthResponse;
 import com.aurealab.api.dto.LoginRequest;
 import com.aurealab.api.model.entity.UserEntity;
@@ -9,6 +10,7 @@ import com.aurealab.api.util.constants;
 import com.aurealab.api.util.exceptions.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,7 +73,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     }
 
 
-    public AuthResponse loginUser(LoginRequest userLogin){
+    public ResponseEntity<APIResponseDTO<AuthResponse>> loginUser(LoginRequest userLogin){
         String username = userLogin.username();
         String password = userLogin.password();
 
@@ -80,9 +82,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         String accessToken = jwtUtils.createToken(authentication);
 
-        AuthResponse authResponse = new AuthResponse(username, "user Loged succesfuly", accessToken, true);
-
-        return  authResponse;
+        return  ResponseEntity.ok(APIResponseDTO.success(new AuthResponse(username, "user Loged succesfuly", accessToken, true), ""));
     }
 
     public Authentication authenticate(String username, String password){
