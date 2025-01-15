@@ -33,12 +33,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults()) // Habilitar CORS
+                .csrf(AbstractHttpConfigurer::disable) // Desactivar CSRF
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(http ->{
+                .authorizeHttpRequests(http -> {
                     http.requestMatchers(HttpMethod.POST, "/login").permitAll();
-                    http.requestMatchers(HttpMethod.GET).hasAuthority("READ");
+                    http.requestMatchers(HttpMethod.GET).permitAll();
                     http.requestMatchers(HttpMethod.POST).hasAuthority("CREATE");
                     http.requestMatchers(HttpMethod.PATCH).hasAuthority("UPDATE");
                     http.requestMatchers(HttpMethod.PUT).hasAuthority("UPDATE");

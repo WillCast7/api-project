@@ -47,12 +47,12 @@ public class UserServiceImpl implements UserService {
                 for (UserEntity user : users) {
                     dtoList.add(userMapper.setEntityToDTO(user));
                 }
-                response = APIResponseDTO.withPageable(dtoList, constants.messages.consultGood, "200", users.getPageable());
+                response = APIResponseDTO.withPageable(dtoList, constants.messages.consultGood, users.getPageable());
             } else {
-                response = APIResponseDTO.failure(constants.messages.noData, "400", "vacio");
+                response = APIResponseDTO.failure(constants.messages.noData, "vacio");
             }
         } catch (Exception e) {
-            response = APIResponseDTO.failure(constants.errors.findError + " los usuarios", "500", e.getMessage());
+            response = APIResponseDTO.failure(constants.errors.findError + " los usuarios", e.getMessage());
         }
         return response;
     }
@@ -133,9 +133,9 @@ public class UserServiceImpl implements UserService {
         if (userOptional.isPresent()) {
             UserMapper userMapper = new UserMapper();
             userDTO = userMapper.setEntityToDTO(userOptional.get());
-            response = APIResponseDTO.success(userDTO, constants.messages.consultGood, "200");
+            response = APIResponseDTO.success(userDTO, constants.messages.consultGood);
         } else {
-            response = APIResponseDTO.failure(constants.messages.dontFoundByID, "400", constants.messages.dontFoundByID);
+            response = APIResponseDTO.failure(constants.messages.dontFoundByID, constants.messages.dontFoundByID);
         }
 
         return response;
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
             log.info("Usuario guardado: {}", userEntity.getUserName());
 
-            response = APIResponseDTO.success(constants.success.savedSuccess, "200", constants.success.savedSuccess);
+            response = APIResponseDTO.success(constants.success.savedSuccess, constants.success.savedSuccess);
 
         } catch (DataIntegrityViolationException e) {
             String exceptionMessage = "Ya existe un usuario con ese ";

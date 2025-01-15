@@ -41,28 +41,28 @@ public class DataSourceConfig {
 
 
 
-    /**
-     * Crea un bean de DataSourceProperties para la base de datos B1.
-     *
-     * @return Un objeto DataSourceProperties configurado.
-     */
     @Bean("b1DBProperties")
     @ConfigurationProperties(prefix = "spring.datasource.b1")
     public DataSourceProperties getB1Properties() {
         return new DataSourceProperties();
     }
 
-    /**
-     * Crea un bean de DataSource utilizando las propiedades definidas para B1.
-     *
-     * @return Un objeto DataSource inicializado.
-     */
     @Bean("b1DBDataSource")
     public DataSource getB1DataSource() {
         return getB1Properties().initializeDataSourceBuilder().build();
     }
 
 
+    @Bean("sapDBProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.sap")
+    public DataSourceProperties getSapProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean("sapDBDataSource")
+    public DataSource getSapDataSource() {
+        return getSapProperties().initializeDataSourceBuilder().build();
+    }
 
 
 

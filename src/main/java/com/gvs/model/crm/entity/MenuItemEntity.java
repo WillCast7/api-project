@@ -31,7 +31,4 @@ public class MenuItemEntity {
     private int orderMenu;
 
     private String icon;
-
-    @ManyToMany(mappedBy = "menus") // Ajuste aquí
-    private Set<RoleEntity> roles = new HashSet<>();
 }

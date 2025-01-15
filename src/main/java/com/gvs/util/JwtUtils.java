@@ -1,6 +1,7 @@
 package com.gvs.util;
 
 
+import com.gvs.model.crm.entity.MenuItemEntity;
 import com.gvs.util.exceptions.TokenException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -13,11 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,32 +37,43 @@ public class JwtUtils {
      * @param authentication
      * @return a token
      */
-    public String createToken (Authentication authentication){
+    public String createToken(Authentication authentication) {
         try {
+            // Algoritmo de firma
             Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
-            String username = authentication.getPrincipal().toString();
+
+            // Obtén el username desde el principal
+            String username;
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                username = ((UserDetails) authentication.getPrincipal()).getUsername();
+            } else {
+                username = authentication.getPrincipal().toString();
+            }
+
+            // Obtén las autoridades
             String authorities = authentication.getAuthorities()
                     .stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));
 
+            // Crear el token
             String jwtToken = JWT.create()
                     .withIssuer(this.userGenerator)
                     .withSubject(username)
-                    .withClaim("authorities", authorities)
+                    .withClaim("authorities", authorities) // Añade las autoridades
                     .withIssuedAt(new Date())
-                    .withExpiresAt(new Date(System.currentTimeMillis()+10800000))
+                    .withExpiresAt(new Date(System.currentTimeMillis() + 10800000)) // 3 horas de expiración
                     .withJWTId(UUID.randomUUID().toString())
                     .withNotBefore(new Date(System.currentTimeMillis()))
                     .sign(algorithm);
 
             return jwtToken;
 
-        } catch (JWTCreationException exception){
-            throw new TokenException("Error al generar el token JWT.", exception) {
-            };
+        } catch (JWTCreationException exception) {
+            throw new TokenException("Error al generar el token JWT.", exception);
         }
     }
+
 
     /**
      * Token Validation
