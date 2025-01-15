@@ -31,6 +31,7 @@ public class MenuItemEntity {
 
     private String icon;
 
-    @ManyToMany(mappedBy = "menus")
-    private Set<RolesEntity> roles;
+    // Relación con MenuRoleEntity
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MenuRoleEntity> menuRoles;
 }

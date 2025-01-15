@@ -14,14 +14,14 @@ public class ApiApplication {
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
-	@Autowired
-	TemplateService templateService;
-
-	@Bean
-	CommandLineRunner init(){
-		return args -> {
-			System.out.println(templateService.createTemplate());
-		};
-	}
+//	@Autowired
+//	TemplateService templateService;
+//
+//	@Bean
+//	CommandLineRunner init(){
+//		return args -> {
+//			System.out.println(templateService.createTemplate());
+//		};
+//	}
 
 }

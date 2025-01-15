@@ -1,10 +1,7 @@
 package com.aurealab.api.service.impl;
 
 import com.aurealab.api.model.entity.*;
-import com.aurealab.api.model.repository.MenuRepository;
-import com.aurealab.api.model.repository.PermissionRepository;
-import com.aurealab.api.model.repository.RoleRepository;
-import com.aurealab.api.model.repository.UserRepository;
+import com.aurealab.api.model.repository.*;
 import com.aurealab.api.service.TemplateService;
 import com.aurealab.api.util.constants;
 import jakarta.transaction.Transactional;
@@ -30,6 +27,9 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Autowired
     MenuRepository menuRepository;
+
+    @Autowired
+    MenuRoleRepository menuRoleRepository;
 
     /**
      * Principal function for data template creation
@@ -119,33 +119,96 @@ public class TemplateServiceImpl implements TemplateService {
                 .orElse(null);
     }
 
+    public void menusCreation() {
+        log.info(constants.uitlLogs.separator);
+        log.info("Creating Menus");
+
+        // Crear los menús
+        MenuItemEntity advisers = MenuItemEntity.builder()
+                .name("Asesores")
+                .father("Administracion")
+                .route("/administracion/asesores")
+                .orderMenu(1)
+                .icon(".")
+                .build();
+        MenuItemEntity users = MenuItemEntity.builder()
+                .name("Usuarios")
+                .father("Administracion")
+                .route("/administracion/usuarios")
+                .orderMenu(2)
+                .icon(".")
+                .build();
+        MenuItemEntity myAccount = MenuItemEntity.builder()
+                .name("Mi cuenta")
+                .father("Configuracion")
+                .route("/configuracion/micuenta")
+                .orderMenu(1)
+                .icon(".")
+                .build();
+        MenuItemEntity myCda = MenuItemEntity.builder()
+                .name("Mi CDA")
+                .father("Configuracion")
+                .route("/configuracion/micda")
+                .orderMenu(2)
+                .icon(".")
+                .build();
+
+        // Persistir los menús
+        advisers = menuRepository.save(advisers);  // Aquí se persiste el menú
+        users = menuRepository.save(users);  // Aquí se persiste el menú
+        myAccount = menuRepository.save(myAccount);  // Aquí se persiste el menú
+        myCda = menuRepository.save(myCda);  // Aquí se persiste el menú
+
+        log.info("Menus created successfully");
+
+        // Obtener los roles existentes
+        Set<RolesEntity> roles = new HashSet<>((Collection) roleRepository.findAll());
+
+        // Asociar roles con menús
+        createMenuRole(advisers, roles);  // Asocia los roles con el menú 'Asesores'
+        createMenuRole(users, roles);     // Asocia los roles con el menú 'Usuarios'
+        createMenuRole(myAccount, roles); // Asocia los roles con el menú 'Mi cuenta'
+        createMenuRole(myCda, roles);     // Asocia los roles con el menú 'Mi CDA'
+
+        log.info(constants.uitlLogs.separator);
+        log.info("Menus and Roles associated successfully");
+    }
+
+    private void createMenuRole(MenuItemEntity menuItem, Set<RolesEntity> roles) {
+        // Asociar roles con el menú
+        for (RolesEntity role : roles) {
+            MenuRoleEntity menuRole = MenuRoleEntity.builder()
+                    .menu(menuItem)  // Aquí se pasa el objeto 'MenuItemEntity' ya persistido
+                    .roleId(role.getRolId())  // Asocia el rol por su ID
+                    .build();
+            // Guardar la relación entre el menú y el rol
+            menuRoleRepository.save(menuRole);
+            log.info("MenuRole created for menuId: {} and roleId: {}", menuItem.getId(), role.getRolId());
+        }
+    }
+
+
+
     public void rolesCreation() {
         log.info(constants.uitlLogs.separator);
-        log.info("Generating in memory Permissions");
-        PermissionEntity read = PermissionEntity.builder()
-                .name("READ")
-                .build();
-        PermissionEntity create = PermissionEntity.builder()
-                .name("CREATE")
-                .build();
-        PermissionEntity update = PermissionEntity.builder()
-                .name("UPDATE")
-                .build();
-        PermissionEntity superUser = PermissionEntity.builder()
-                .name("SUPERUSER")
-                .build();
+        log.info("Generating in-memory Permissions");
+
+        PermissionEntity read = PermissionEntity.builder().name("READ").build();
+        PermissionEntity create = PermissionEntity.builder().name("CREATE").build();
+        PermissionEntity update = PermissionEntity.builder().name("UPDATE").build();
+        PermissionEntity superUser = PermissionEntity.builder().name("SUPERUSER").build();
 
         log.info(constants.uitlLogs.separator);
         log.info("Creating Roles");
 
-        //All permissions
-        createRoleIfNotExists("SUPERUSER", Set.of(read,create,update,superUser), "Super Usuario", constants.roleDescriptions.superUser);
-        createRoleIfNotExists("ADMIN", Set.of(read,create,update), "Administrador", constants.roleDescriptions.admin);
-        createRoleIfNotExists("SUPERVISOR", Set.of(read,create,update), "Supervisor", constants.roleDescriptions.supervisor);
-        createRoleIfNotExists("OPERATIVEUSER", Set.of(read,create), "Usuario operativo", constants.roleDescriptions.operativeUser);
-        createRoleIfNotExists("DIGITER", Set.of(read,create), "Digitador", constants.roleDescriptions.digiter);
-
+        // Persistir roles con menús y permisos asociados
+        createRoleIfNotExists("SUPERUSER", Set.of(read, create, update, superUser), "Super Usuario", constants.roleDescriptions.superUser);
+        createRoleIfNotExists("ADMIN", Set.of(read, create, update), "Administrador", constants.roleDescriptions.admin);
+        createRoleIfNotExists("SUPERVISOR", Set.of(read, create, update), "Supervisor", constants.roleDescriptions.supervisor);
+        createRoleIfNotExists("OPERATIVEUSER", Set.of(read, create), "Usuario operativo", constants.roleDescriptions.operativeUser);
+        createRoleIfNotExists("DIGITER", Set.of(read, create), "Digitador", constants.roleDescriptions.digiter);
     }
+
 
     /**
      * validate if role exists; if it doesn't, it'll be created
@@ -167,33 +230,5 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
 
-    private void menusCreation(){
-        log.info(constants.uitlLogs.separator);
-        log.info("Creating Menus");
-        Iterable<RolesEntity> rolesIterable = roleRepository.findAll();
 
-        //Convert the rolesIterable of iterable type to a rolesList of a set type
-        Set<RolesEntity> rolesList = new HashSet<>((Collection<? extends RolesEntity>) rolesIterable);
-
-        log.info("Be will created the menu");
-        //creation of the menus
-        createMenu("Asesores", "Administracion", "/administracion/asesores", 1, ".", rolesList);
-        createMenu("Usuarios", "Administracion", "/administracion/usuarios", 1, ".", rolesList);
-        createMenu("Mi cuenta", "Configuracion", "/configuracion/micuenta", 1, ".", rolesList);
-        createMenu("Mi CDA", "Configuracion", "/configuracion/micda", 1, ".", rolesList);
-
-    }
-
-    private void createMenu(String name, String father, String route, int orderMenu, String icon, Set<RolesEntity> roles){
-         menuRepository.save(MenuItemEntity.builder()
-                .name(name)
-                .father(father)
-                .route(route)
-                .orderMenu(orderMenu)
-                .icon(icon)
-                .roles(roles)
-                .build()
-         );
-        log.info("Created the item Menu: {}", name + " of " + father);
-    }
 }

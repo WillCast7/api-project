@@ -39,11 +39,4 @@ public class RolesEntity {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Set<UserEntity> users = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-        name = "menu_roles",
-        joinColumns = @JoinColumn(name = "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "menu_id")
-    )
-    private Set<MenuItemEntity> menus;
 }

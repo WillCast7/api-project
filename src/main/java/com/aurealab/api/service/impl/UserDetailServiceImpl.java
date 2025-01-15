@@ -3,6 +3,7 @@ package com.aurealab.api.service.impl;
 import com.aurealab.api.dto.APIResponseDTO;
 import com.aurealab.api.dto.AuthResponse;
 import com.aurealab.api.dto.LoginRequest;
+import com.aurealab.api.model.entity.MenuItemEntity;
 import com.aurealab.api.model.entity.UserEntity;
 import com.aurealab.api.model.repository.UserRepository;
 import com.aurealab.api.util.JwtUtils;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -52,8 +54,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         UserEntity userEntity = userRepository.findUserEntityByUserName(username)
                 .orElseThrow(() -> new BaseException("El usuario " + username + " no existe.", constants.errors.invalidUserOrPass) {
                 });
-
-        log.info("finish the user detail service");
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(userEntity.getRole().getRole())));
