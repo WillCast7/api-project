@@ -2,7 +2,6 @@ package com.gvs.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,18 +21,16 @@ public class APIResponseDTO<T> implements Serializable {
 	private final String error;
 	private final String timestamp; // Eliminar inicialización directa
 	private final Optional<T> data; // Usar Optional para evitar nulos
-	private final Pageable pageable;
-	private final PageableResponseDTO manualPageable;
+	private final Object pageable; // Puede ser Pageable o PageableResponseDTO
 
 	// Constructor privado para forzar el uso del builder
-	private APIResponseDTO(boolean state, String message, String error, String timestamp, Optional<T> data, Pageable pageable, PageableResponseDTO manualPageable) {
+	private APIResponseDTO(boolean state, String message, String error, String timestamp, Optional<T> data, Object pageable) {
 		this.state = state;
 		this.message = message;
 		this.error = error;
 		this.timestamp = timestamp; // Ahora se establece desde el builder
 		this.data = data;
 		this.pageable = pageable;
-		this.manualPageable = manualPageable;
 	}
 
 	// Métodos estáticos para crear respuestas comunes
@@ -56,23 +53,13 @@ public class APIResponseDTO<T> implements Serializable {
 				.build();
 	}
 
-	public static <T> APIResponseDTO<T> withPageable(T data, String message, Pageable pageable) {
+	public static <T> APIResponseDTO<T> withPageable(T data, String message, Object pageable) {
 		return APIResponseDTO.<T>builder()
 				.state(true)
 				.message(message)
 				.timestamp(LocalDateTime.now().toString()) // Se establece aquí
 				.data(Optional.ofNullable(data))
-				.pageable(pageable)
-				.build();
-	}
-
-	public static <T> APIResponseDTO<T> withPageable(T data, String message, PageableResponseDTO manualPageable) {
-		return APIResponseDTO.<T>builder()
-				.state(true)
-				.message(message)
-				.timestamp(LocalDateTime.now().toString()) // Se establece aquí
-				.data(Optional.ofNullable(data))
-				.manualPageable(manualPageable)
+				.pageable(pageable) // Puede ser Pageable o PageableResponseDTO
 				.build();
 	}
 }

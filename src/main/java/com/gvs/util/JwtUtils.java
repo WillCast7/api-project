@@ -55,7 +55,8 @@ public class JwtUtils {
                     .stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));
-
+            System.out.println("authorities");
+            System.out.println(authorities);
             // Crear el token
             String jwtToken = JWT.create()
                     .withIssuer(this.userGenerator)
@@ -86,9 +87,12 @@ public class JwtUtils {
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(this.userGenerator)
                     .build();
+            System.out.println("token");
+            System.out.println(token);
 
             DecodedJWT decodedJWT = verifier.verify(token);
-
+            System.out.println("decodedJWT");
+            System.out.println(decodedJWT);
             return decodedJWT;
 
         }catch (JWTVerificationException exception){

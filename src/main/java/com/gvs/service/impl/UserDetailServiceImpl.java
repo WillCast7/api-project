@@ -117,10 +117,6 @@ public class UserDetailServiceImpl {
     @Transactional("b1TrxManager")
     public UserEntity validateCredentials(String username, String password) {
         try {
-            log.info("username");
-            log.info(username);
-            log.info(password);
-            log.info(DecryptPass.decrypt(password));
             return userRepository.login(username, DecryptPass.decrypt(password))
                     .orElseThrow(() -> new BaseException(
                             constants.errors.invalidUserOrPass,

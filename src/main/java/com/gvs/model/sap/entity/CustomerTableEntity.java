@@ -29,8 +29,6 @@ public class CustomerTableEntity {
 
     private Integer anterior2;
 
-    private Integer anterior3;
-
     @Column(name = "City")
     private String city;
 

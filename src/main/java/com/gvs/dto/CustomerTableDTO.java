@@ -15,7 +15,6 @@ public class CustomerTableDTO {
     private Integer actual;
     private Integer anterior1;
     private Integer anterior2;
-    private Integer anterior3;
     private String city;
     private String asesor;
 }

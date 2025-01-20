@@ -12,10 +12,9 @@ public interface CustomerRepository extends JpaRepository<CustomerTableEntity, L
     @Query(
             value="select ocrd.CardName, " +
                 "ocrd.CardCode, " +
-                "(SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-0 and CardCode = ocrd.cardcode)as actual, " +
-                "(SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-1 and CardCode = ocrd.cardcode)as anterior1, " +
-                "(SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-2 and CardCode = ocrd.cardcode)as anterior2, " +
-                "(SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-3 and CardCode = ocrd.cardcode)as anterior3, " +
+                "ISNULL((SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-0 and CardCode = ocrd.cardcode), 0) as actual, " +
+                "ISNULL((SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-1 and CardCode = ocrd.cardcode), 0) as anterior1, " +
+                "ISNULL((SELECT SUM(DocTotal) FROM OINV WHERE YEAR(DocDate) = YEAR(GETDATE())-2 and CardCode = ocrd.cardcode), 0) as anterior2, " +
                 "ocrd.City, " +
                 "OSLP.SlpName " +
                 "from ocrd " +
