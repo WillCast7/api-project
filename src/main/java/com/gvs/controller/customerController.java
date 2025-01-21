@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -22,9 +23,10 @@ public class customerController {
     CustomerService customerService;
 
     @GetMapping(produces = "application/json", value = "/contactarclientes")
-    public ResponseEntity<APIResponseDTO<Set<CustomerTableEntity>>> getUsers(@RequestParam(defaultValue = "10") int itemsPerPage,
-                                                                                 @RequestParam(defaultValue = "1") int activePage) {
+    public ResponseEntity<APIResponseDTO<Set<CustomerTableEntity>>> getUsers(@RequestParam(defaultValue = "10") int row,
+                                                                        @RequestParam(defaultValue = "1") int page,
+                                                                        @RequestParam(defaultValue = "") String searchValue) {
         System.out.println("entro");
-        return customerService.getCustomersWithManualPagination(activePage, itemsPerPage);
+        return customerService.getCustomersWithManualPagination(row, page, searchValue);
     }
 }

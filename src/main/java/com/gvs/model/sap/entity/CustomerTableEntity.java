@@ -29,6 +29,8 @@ public class CustomerTableEntity {
 
     private Integer anterior2;
 
+    private Integer completado;
+
     @Column(name = "City")
     private String city;
 
