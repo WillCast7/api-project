@@ -8,6 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 public interface CustomerService {
-    public ResponseEntity<APIResponseDTO<Set<CustomerTableEntity>>> getCustomersWithManualPagination(int page, int rows, String searchValue);
+    public ResponseEntity<APIResponseDTO<Set<CustomerTableEntity>>> getCustomersWithManualPagination(int page, int rows, String searchValue, String selectedFilter);
 
 }

@@ -25,8 +25,10 @@ public class customerController {
     @GetMapping(produces = "application/json", value = "/contactarclientes")
     public ResponseEntity<APIResponseDTO<Set<CustomerTableEntity>>> getUsers(@RequestParam(defaultValue = "10") int row,
                                                                         @RequestParam(defaultValue = "1") int page,
-                                                                        @RequestParam(defaultValue = "") String searchValue) {
+                                                                        @RequestParam(defaultValue = "") String searchValue,
+                                                                         @RequestParam(defaultValue = "todos") String selectedFilter
+                                                                             ) {
         System.out.println("entro");
-        return customerService.getCustomersWithManualPagination(row, page, searchValue);
+        return customerService.getCustomersWithManualPagination(row, page, searchValue, selectedFilter);
     }
 }
