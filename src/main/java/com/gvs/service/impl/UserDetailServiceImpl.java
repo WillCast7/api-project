@@ -67,7 +67,6 @@ public class UserDetailServiceImpl {
 
         // Validar credenciales
         UserEntity userEntity = validateCredentials(userLogin.username(), userLogin.password());
-
         if (userEntity == null) {
             APIResponseDTO<AuthResponse> response = APIResponseDTO.failure(
                     constants.errors.invalidUserOrPass, constants.descriptions.loginError
@@ -85,7 +84,6 @@ public class UserDetailServiceImpl {
 
             // Cargar detalles del usuario
             UserDetails userDetails = loadUserDetails(userEntity.getRole(), role, userLogin.username());
-
             Set<MenuItemEntity> optionalMenu = menuServiceImpl.getMenuByRole(userEntity.getRole());
             if (optionalMenu.isEmpty()){
                 log.warn("No se encontró ningún menu asociado al validador: {}", userEntity.getRole());

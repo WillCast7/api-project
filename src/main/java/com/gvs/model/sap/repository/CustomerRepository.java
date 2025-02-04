@@ -165,6 +165,4 @@ public interface CustomerRepository extends JpaRepository<CustomerTableEntity, L
                 "OSLP.SlpName LIKE CONCAT('%', :searchValue, '%')) ",
             nativeQuery = true)
     long countAllRecordsWithOutInit(@Param("searchValue") String searchValue);
-
-
 }

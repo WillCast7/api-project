@@ -1,7 +1,10 @@
 package com.gvs.service;
 
 import com.gvs.dto.APIResponseDTO;
+<<<<<<< HEAD
 import com.gvs.model.sap.entity.CustomerDataViewEntity;
+=======
+>>>>>>> 5971ad3519d484503658e788e6d1cde69836658e
 import com.gvs.model.sap.entity.CustomerTableEntity;
 import org.springframework.http.ResponseEntity;
 
