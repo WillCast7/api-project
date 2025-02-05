@@ -35,6 +35,7 @@ public class RoleEntity {
 
     private boolean status;
 
+<<<<<<< HEAD:src/main/java/com/gvs/model/crm/entity/RoleEntity.java
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "kaizen_rolepermission", // Correcto
@@ -43,3 +44,13 @@ public class RoleEntity {
     )
     private Set<PermissionEntity> perrmissionList = new HashSet<>();
 }
+=======
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private Set<PermissionEntity> perrmissionList = new HashSet<>();
+
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    private Set<UserEntity> users = new HashSet<>();
+
+}
+>>>>>>> e44fb2bd7d772988ee34dc7afb4df901cc70d725:src/main/java/com/aurealab/api/model/entity/RolesEntity.java

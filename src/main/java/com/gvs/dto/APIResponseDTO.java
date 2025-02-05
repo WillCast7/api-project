@@ -24,7 +24,11 @@ public class APIResponseDTO<T> implements Serializable {
 	private final Object pageable; // Puede ser Pageable o PageableResponseDTO
 
 	// Constructor privado para forzar el uso del builder
+<<<<<<< HEAD:src/main/java/com/gvs/dto/APIResponseDTO.java
 	private APIResponseDTO(boolean state, String message, String error, String timestamp, Optional<T> data, Object pageable) {
+=======
+	private APIResponseDTO(boolean state, String message, String error, String timestamp, Optional<T> data, Pageable pageable) {
+>>>>>>> e44fb2bd7d772988ee34dc7afb4df901cc70d725:src/main/java/com/aurealab/api/dto/APIResponseDTO.java
 		this.state = state;
 		this.message = message;
 		this.error = error;
@@ -53,7 +57,11 @@ public class APIResponseDTO<T> implements Serializable {
 				.build();
 	}
 
+<<<<<<< HEAD:src/main/java/com/gvs/dto/APIResponseDTO.java
 	public static <T> APIResponseDTO<T> withPageable(T data, String message, Object pageable) {
+=======
+	public static <T> APIResponseDTO<T> withPageable(T data, String message, Pageable pageable) {
+>>>>>>> e44fb2bd7d772988ee34dc7afb4df901cc70d725:src/main/java/com/aurealab/api/dto/APIResponseDTO.java
 		return APIResponseDTO.<T>builder()
 				.state(true)
 				.message(message)

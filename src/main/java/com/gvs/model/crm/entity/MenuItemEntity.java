@@ -31,4 +31,11 @@ public class MenuItemEntity {
     private int orderMenu;
 
     private String icon;
+<<<<<<< HEAD:src/main/java/com/gvs/model/crm/entity/MenuItemEntity.java
+=======
+
+    // Relación con MenuRoleEntity
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MenuRoleEntity> menuRoles;
+>>>>>>> e44fb2bd7d772988ee34dc7afb4df901cc70d725:src/main/java/com/aurealab/api/model/entity/MenuItemEntity.java
 }
