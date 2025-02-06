@@ -19,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,9 @@ public class UserDetailServiceImpl {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Carga los detalles del usuario incluyendo roles, permisos y menú.
@@ -63,13 +67,14 @@ public class UserDetailServiceImpl {
     public ResponseEntity<APIResponseDTO<AuthResponse>> loginUser(LoginRequest userLogin) {
 
         // Validar credenciales
-        UserEntity userEntity = validateCredentials(userLogin.username(), userLogin.password());
+        UserEntity userEntity = validateCredentials(userLogin.username(), passwordEncoder.encode(userLogin.password()));
         if (userEntity == null) {
             APIResponseDTO<AuthResponse> response = APIResponseDTO.failure(
                     constants.errors.invalidUserOrPass, constants.descriptions.loginError
             );
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
+
         try {
             Optional<RoleEntity> roleEntity = roleRepository.findByValidator(userEntity.getRole().getRoleName());
             if (roleEntity.isEmpty()) {
@@ -110,6 +115,8 @@ public class UserDetailServiceImpl {
      */
     @Transactional("aureaTrxManager")
     public UserEntity validateCredentials(String username, String password) {
+        System.out.println("password");
+        System.out.println(password);
         try {
             return userRepository.login(username, DecryptPass.decrypt(password))
                     .orElseThrow(() -> new BaseException(

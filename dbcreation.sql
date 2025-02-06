@@ -1,3 +1,28 @@
+CREATE TABLE persons (
+    id SERIAL PRIMARY KEY,
+    dni VARCHAR(255),
+    names VARCHAR(255),
+    surnames VARCHAR(255),
+    phone VARCHAR(255) UNIQUE,
+    address VARCHAR(255),
+    birth DATE
+);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE,
+    username VARCHAR(255) UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    person_id INT UNIQUE, -- Relación 1 a 1 con persons
+    role_id INT, -- Relación con roles
+    is_enable BOOLEAN DEFAULT TRUE,
+    account_not_expired BOOLEAN,
+    account_not_locked BOOLEAN,
+    credential_not_expired BOOLEAN,
+    CONSTRAINT fk_users_person FOREIGN KEY (person_id) REFERENCES persons(id) ON DELETE CASCADE,
+    CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id) -- Asumiendo que existe la tabla roles
+);
+
 CREATE TABLE IF NOT EXISTS roles (
     id BIGSERIAL PRIMARY KEY,
     role VARCHAR(255),
@@ -44,6 +69,16 @@ CREATE TABLE IF NOT EXISTS configparams(
     parent VARCHAR(50) NOT NULL,
     status INT NOT NULL
 );
+
+WITH inserted_person AS (
+    INSERT INTO persons (dni, names, surnames, phone, address, birth)
+    VALUES ('12345678', 'William', 'Castaño', '3023424366', 'Via La Buitrera', '1994-10-05')
+    RETURNING id
+)
+
+INSERT INTO users (email, username, password, person_id, role_id, is_enable, account_not_expired, account_not_locked, credential_not_expired)
+SELECT 'williamisrael210@gmail.com', 'willcast', '$2a$10$q5rtm2jyXUVOpY.2hvR7OOcz9wQcuAgOKAXdOyjyt2x0tcrJayOUy', id, 1, TRUE, TRUE, TRUE, TRUE
+FROM inserted_person;
 
 
 INSERT INTO permissions (name) VALUES ('READ'), ('CREATE'), ('UPDATE'), ('DELETE'), ('SUPERUSER');
