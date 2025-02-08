@@ -118,7 +118,7 @@ public class UserDetailServiceImpl {
         System.out.println("password");
         System.out.println(password);
         try {
-            return userRepository.login(username, DecryptPass.decrypt(password))
+            return userRepository.findByUserNameOrEmailAndPassword(username, username, DecryptPass.decrypt(password))
                     .orElseThrow(() -> new BaseException(
                             constants.errors.invalidUserOrPass,
                             constants.descriptions.loginError,

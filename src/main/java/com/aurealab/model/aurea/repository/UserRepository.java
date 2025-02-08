@@ -12,8 +12,5 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity, Long>, ListPagingAndSortingRepository<UserEntity, Long> {
 
-
-    //Todo Cambiar este query
-    @Query(value = "EXEC [dbo].[CS_Login2] :username, :password", nativeQuery = true)
-    Optional<UserEntity> login(@Param("username") String username, @Param("password") String password);
+    Optional<UserEntity> findByUserNameOrEmailAndPassword(String userName, String email, String password);
 }

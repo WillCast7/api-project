@@ -1,3 +1,46 @@
+CREATE TABLE companies (
+    id              SERIAL PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL UNIQUE,  -- Nombre de la empresa
+    legal_name      VARCHAR(255),                  -- Razón social
+    tax_id          VARCHAR(50) UNIQUE,            -- NIT / RUC / CIF, etc.
+    email          VARCHAR(255) UNIQUE,           -- Correo de contacto
+    phone          VARCHAR(50),                   -- Teléfono de contacto
+    address        TEXT,                          -- Dirección
+    country        VARCHAR(100),                  -- País
+    state          VARCHAR(100),                  -- Estado/Provincia
+    city           VARCHAR(100),                  -- Ciudad
+    website        VARCHAR(255),                  -- Sitio web de la empresa
+    logo_url       VARCHAR(500),                  -- URL del logo de la empresa
+    subscription_plan VARCHAR(100),               -- Plan de suscripción (Free, Pro, Enterprise)
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_active      BOOLEAN DEFAULT TRUE           -- Estado activo/inactivo
+);
+
+CREATE TABLE subscriptions (
+    id             SERIAL PRIMARY KEY,
+    company_id     BIGINT NOT NULL,  -- Relación con la empresa
+    plan_name      VARCHAR(100) NOT NULL,  -- Plan (Free, Pro, Enterprise)
+    price          DECIMAL(10,2) NOT NULL,  -- Precio del plan
+    start_date     DATE NOT NULL,  -- Fecha de inicio de la suscripción
+    end_date       DATE NOT NULL,  -- Fecha de vencimiento
+    is_active      BOOLEAN DEFAULT TRUE,  -- Si la suscripción está activa
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+);
+
+CREATE TABLE payments (
+    id             SERIAL PRIMARY KEY,
+    company_id     BIGINT NOT NULL,  -- Empresa que realizó el pago
+    amount         DECIMAL(10,2) NOT NULL,  -- Monto pagado
+    payment_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de pago
+    payment_status ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL,  -- Estado del pago
+    transaction_id VARCHAR(255) UNIQUE,  -- ID de la transacción con el proveedor de pagos
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+);
+
+
 CREATE TABLE persons (
     id SERIAL PRIMARY KEY,
     dni VARCHAR(255),
@@ -10,6 +53,7 @@ CREATE TABLE persons (
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+    company_id  BIGINT NOT NULL,
     email VARCHAR(255) UNIQUE,
     username VARCHAR(255) UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -40,6 +84,7 @@ CREATE TABLE IF NOT exists permissions (
 CREATE TABLE IF NOT exists menus (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) UNIQUE NOT NULL,
+    name_father VARCHAR(255) NOT NULL,
     father VARCHAR(255),
     route VARCHAR(255),
     menu_order INT,
@@ -97,12 +142,12 @@ INSERT INTO rolepermission (role_id, permission_id) VALUES
 (4, 1), (4, 2),
 (5, 1);
 
-INSERT INTO menus (name, father, route, menu_order, icon) VALUES
-('Asesores', 'Mercadeo', 'mercadeo/asesores', 1, NULL),
-('Contacto de clientes', 'Mercadeo', 'mercadeo/contactarclientes', 2, NULL),
-('Ventas', 'Mercadeo', 'mercadeo/ventas', 1, NULL),
-('Llamadas', 'Mercadeo', 'mercadeo/llamadas', 2, NULL),
-('Mi cuenta', 'Configuracion', 'configuracion/micuenta', 1, NULL);
+INSERT INTO menus (name, father, name_father, route, menu_order, icon) VALUES
+('Asesores', 'mercadeo','Mercadeo', 'mercadeo/asesores', 1, NULL),
+('Contacto de clientes', 'mercadeo','Mercadeo', 'mercadeo/contactarclientes', 2, NULL),
+('Ventas', 'mercadeo','Mercadeo', 'mercadeo/ventas', 1, NULL),
+('Llamadas', 'mercadeo','Mercadeo', 'mercadeo/llamadas', 2, NULL),
+('Mi cuenta', 'configuracion','Configuracion', 'configuracion/micuenta', 1, NULL);
 
 INSERT INTO menuroles (role_id, menu_id) VALUES
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
