@@ -1,44 +1,42 @@
-CREATE TABLE companies (
-    id              SERIAL PRIMARY KEY,
-    name            VARCHAR(255) NOT NULL UNIQUE,  -- Nombre de la empresa
-    legal_name      VARCHAR(255),                  -- Razón social
-    tax_id          VARCHAR(50) UNIQUE,            -- NIT / RUC / CIF, etc.
-    email          VARCHAR(255) UNIQUE,           -- Correo de contacto
-    phone          VARCHAR(50),                   -- Teléfono de contacto
-    address        TEXT,                          -- Dirección
-    country        VARCHAR(100),                  -- País
-    state          VARCHAR(100),                  -- Estado/Provincia
-    city           VARCHAR(100),                  -- Ciudad
-    website        VARCHAR(255),                  -- Sitio web de la empresa
-    logo_url       VARCHAR(500),                  -- URL del logo de la empresa
-    subscription_plan VARCHAR(100),               -- Plan de suscripción (Free, Pro, Enterprise)
-    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    is_active      BOOLEAN DEFAULT TRUE           -- Estado activo/inactivo
-);
+    CREATE TABLE companies (
+        id              SERIAL PRIMARY KEY,
+        name            VARCHAR(255) NOT NULL UNIQUE,  -- Nombre de la empresa
+        legal_name      VARCHAR(255),                  -- Razón social
+        tax_id          VARCHAR(50) UNIQUE,            -- NIT / RUC / CIF, etc.
+        email          VARCHAR(255) UNIQUE,           -- Correo de contacto
+        phone          VARCHAR(50),                   -- Teléfono de contacto
+        address        TEXT,                          -- Dirección
+        country        VARCHAR(100),                  -- País
+        state          VARCHAR(100),                  -- Estado/Provincia
+        city           VARCHAR(100),                  -- Ciudad
+        website        VARCHAR(255),                  -- Sitio web de la empresa
+        logo_url       VARCHAR(500),                  -- URL del logo de la empresa
+        subscription_plan VARCHAR(100),               -- Plan de suscripción (Free, Pro, Enterprise)
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        is_active      BOOLEAN DEFAULT TRUE           -- Estado activo/inactivo
+    );
 
-CREATE TABLE subscriptions (
-    id             SERIAL PRIMARY KEY,
-    company_id     BIGINT NOT NULL,  -- Relación con la empresa
-    plan_name      VARCHAR(100) NOT NULL,  -- Plan (Free, Pro, Enterprise)
-    price          DECIMAL(10,2) NOT NULL,  -- Precio del plan
-    start_date     DATE NOT NULL,  -- Fecha de inicio de la suscripción
-    end_date       DATE NOT NULL,  -- Fecha de vencimiento
-    is_active      BOOLEAN DEFAULT TRUE,  -- Si la suscripción está activa
-    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
-);
+    CREATE TABLE subscriptions (
+        id             SERIAL PRIMARY KEY,
+        company_id     BIGINT NOT NULL,  -- Relación con la empresa
+        plan_name      VARCHAR(100) NOT NULL,  -- Plan (Free, Pro, company)
+        price          DECIMAL(10,2) NOT NULL,  -- Precio del plan
+        start_date     DATE NOT NULL,  -- Fecha de inicio de la suscripción
+        end_date       DATE NOT NULL,  -- Fecha de vencimiento
+        is_active      BOOLEAN DEFAULT TRUE,  -- Si la suscripción está activa
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+    );
 
-CREATE TABLE payments (
-    id             SERIAL PRIMARY KEY,
-    company_id     BIGINT NOT NULL,  -- Empresa que realizó el pago
-    amount         DECIMAL(10,2) NOT NULL,  -- Monto pagado
-    payment_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de pago
-    payment_status ENUM('PENDING', 'COMPLETED', 'FAILED') NOT NULL,  -- Estado del pago
-    transaction_id VARCHAR(255) UNIQUE,  -- ID de la transacción con el proveedor de pagos
-    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
-);
+    CREATE TABLE payments (
+        id             SERIAL PRIMARY KEY,
+        company_id     BIGINT NOT NULL,  -- Empresa que realizó el pago
+        amount         DECIMAL(10,2) NOT NULL,  -- Monto pagado
+        payment_date   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Fecha de pago
+        payment_status VARCHAR(10) NOT NULL,  -- Estado del pago
+        transaction_id VARCHAR(255) UNIQUE,  -- ID de la transacción con el proveedor de pagos
+        FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
+    );
 
 
 CREATE TABLE persons (
@@ -65,6 +63,7 @@ CREATE TABLE users (
     credential_not_expired BOOLEAN,
     CONSTRAINT fk_users_person FOREIGN KEY (person_id) REFERENCES persons(id) ON DELETE CASCADE,
     CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id) -- Asumiendo que existe la tabla roles
+    FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS roles (

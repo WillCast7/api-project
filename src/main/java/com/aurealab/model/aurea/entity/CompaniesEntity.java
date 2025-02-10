@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -13,8 +14,8 @@ import java.util.Date;
 @Entity
 @Builder
 @Data
-@Table(name = "enterprises")
-public class EnterpriseEntity {
+@Table(name = "companies")
+public class CompaniesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,10 +49,10 @@ public class EnterpriseEntity {
     private String subscriptionPlan;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "is_active")
     private Boolean isActive;

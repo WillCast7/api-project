@@ -42,7 +42,7 @@ public class AureaConfig {
     @Bean("aureaEMF")
     public LocalContainerEntityManagerFactoryBean aureaEntityManagerFactory() {
         Map<String, Object> additionalProps = new HashMap<>();
-        additionalProps.put("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect");
+        additionalProps.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
         System.out.println("Usando DataSource para Aurea: ");
 

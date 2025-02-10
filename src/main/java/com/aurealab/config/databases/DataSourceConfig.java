@@ -34,6 +34,7 @@ public class DataSourceConfig {
      * @return Un objeto DataSource inicializado.
      */
     @Bean("aureaDBDataSource")
+    @Primary
     public DataSource getAureaDataSource() {
         return getAureaProperties().initializeDataSourceBuilder().build();
     }

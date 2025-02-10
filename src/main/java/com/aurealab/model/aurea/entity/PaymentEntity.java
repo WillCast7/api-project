@@ -15,8 +15,8 @@ import java.util.Date;
 @Entity
 @Builder
 @Data
-@Table(name = "subscriptions")
-public class SubscriptionsEntity {
+@Table(name = "payments")
+public class PaymentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +26,14 @@ public class SubscriptionsEntity {
     @JoinColumn(name = "company_id", nullable = false) // Clave foránea
     private CompaniesEntity company;
 
-    @Column(name = "plan_name")
-    private String planName;
+    private BigDecimal amount;
 
-    private BigDecimal price;
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    @Column(name = "payment_status")
+    private String paymentStatus;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
-
-    @Column(name = "is_active")
-    private Boolean isActive;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "transaction_id")
+    private String transactionId;
 }
