@@ -20,9 +20,6 @@ public class MenuItemEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "name_father")
-    private String nameFather;
-
     private String father;
 
     private String route;

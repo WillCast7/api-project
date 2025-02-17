@@ -90,7 +90,7 @@ CREATE TABLE IF NOT exists menus (
     icon VARCHAR(255)
 );
 
-CREATE TABLE IF NOT EXISTS rolepermission (
+CREATE TABLE IF NOT EXISTS role_permission (
     role_id BIGINT NOT NULL,
     permission_id BIGINT NOT NULL,
     PRIMARY KEY (role_id, permission_id),
@@ -127,14 +127,14 @@ FROM inserted_person;
 
 INSERT INTO permissions (name) VALUES ('READ'), ('CREATE'), ('UPDATE'), ('DELETE'), ('SUPERUSER');
 
-INSERT INTO roles (role, validator, description, role_name, status) VALUES
-('superuser', 'superuser', 'Este rol tiene permisos globales sobre toda la aplicación', 'Super Usuario', TRUE),
-('admin', 'admin', 'Este rol tiene privilegios elevados', 'Administrador', TRUE),
-('supervisor', 'supervisor', 'Este rol esta mas enfocado en reportes y métricas', 'Supervisor', TRUE),
-('operative', 'operative', 'Usuario operativo con capacidad de gestionar turnos', 'Operativo', TRUE),
-('digiter', 'digiter', 'Este rol solo ingresará datos', 'Digitador', TRUE);
+INSERT INTO roles (role, description, role_name, status) VALUES
+('superuser', 'Este rol tiene permisos globales sobre toda la aplicación', 'Super Usuario', TRUE),
+('admin', 'Este rol tiene privilegios elevados', 'Administrador', TRUE),
+('supervisor', 'Este rol esta mas enfocado en reportes y métricas', 'Supervisor', TRUE),
+('operative', 'Usuario operativo con capacidad de gestionar turnos', 'Operativo', TRUE),
+('digiter', 'Este rol solo ingresará datos', 'Digitador', TRUE);
 
-INSERT INTO rolepermission (role_id, permission_id) VALUES
+INSERT INTO role_permission (role_id, permission_id) VALUES
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5),
 (2, 1), (2, 2), (2, 3), (2, 4),
 (3, 1), (3, 2), (3, 3),

@@ -13,6 +13,6 @@ public interface RoleRepository extends CrudRepository<RoleEntity, Long> {
     Optional<RoleEntity> findByName(String role);
 
 
-    Optional<RoleEntity> findByValidator(@Param("validator") String role);
+    Optional<RoleEntity> findByRole(@Param("role") String role);
 
 }

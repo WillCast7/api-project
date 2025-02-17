@@ -20,7 +20,6 @@ import java.util.Optional;
 public class MenuDTO {
 	private Long id;
 	private String name;
-	private String nameFather;
 	private String father;
 	private String route;
 	private int orderMenu;

@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,27 +68,23 @@ public class UserDetailServiceImpl {
     @Transactional("aureaTrxManager")
     public ResponseEntity<APIResponseDTO<AuthResponse>> loginUser(LoginRequest userLogin) {
 
+        System.out.println("password");
+        System.out.println(userLogin.password());
         // Validar credenciales
+        System.out.println("password encoded");
+        System.out.println(passwordEncoder.encode(userLogin.password()));
+
         UserEntity userEntity = validateCredentials(userLogin.username(), passwordEncoder.encode(userLogin.password()));
-        if (userEntity == null) {
-            APIResponseDTO<AuthResponse> response = APIResponseDTO.failure(
-                    constants.errors.invalidUserOrPass, constants.descriptions.loginError
-            );
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        if (!passwordEncoder.matches(userLogin.password(), userEntity.getPassword())) {
+            throw new BadCredentialsException("Incorrect Password");
         }
 
         try {
-            Optional<RoleEntity> roleEntity = roleRepository.findByValidator(userEntity.getRole().getRoleName());
-            if (roleEntity.isEmpty()) {
-                log.warn("No se encontró ningún rol asociado al validador: {}", userEntity.getRole());
-                throw new UsernameNotFoundException(constants.errors.invalidRole);
-            }
-
-            RoleEntity role = roleEntity.get();
 
             // Cargar detalles del usuario
-            UserDetails userDetails = loadUserDetails(userEntity.getRole().getRoleName(), role, userLogin.username());
-            Set<MenuItemEntity> optionalMenu = menuServiceImpl.getMenuByRole(userEntity.getRole().getRoleName());
+            UserDetails userDetails = loadUserDetails(userEntity.getRole().getRoleName(), userEntity.getRole(), userLogin.username());
+            System.out.println(userEntity.getRole().getRoleName());
+            Set<MenuItemEntity> optionalMenu = menuServiceImpl.getMenuByRoleName(userEntity.getRole().getRoleName());
             if (optionalMenu.isEmpty()){
                 log.warn("No se encontró ningún menu asociado al validador: {}", userEntity.getRole());
                 throw new UsernameNotFoundException(constants.errors.invalidMenu);
@@ -95,7 +93,7 @@ public class UserDetailServiceImpl {
 
             optionalMenu.stream().forEach(menuItemEntity -> menuList.add(setMenuEntityToDTO(menuItemEntity)));
             String accessToken = jwtUtils.createToken(
-                    new UsernamePasswordAuthenticationToken(userLogin.username(), null, userDetails.getAuthorities())
+                    new UsernamePasswordAuthenticationToken(userLogin.username(), userLogin.password(), userDetails.getAuthorities())
             );
 
 
@@ -118,9 +116,9 @@ public class UserDetailServiceImpl {
         System.out.println("password");
         System.out.println(password);
         try {
-            return userRepository.findByUserNameOrEmailAndPassword(username, username, DecryptPass.decrypt(password))
+            return userRepository.findByUserNameOrEmail(username, username)
                     .orElseThrow(() -> new BaseException(
-                            constants.errors.invalidUserOrPass,
+                            constants.errors.invalidUser,
                             constants.descriptions.loginError,
                             HttpStatus.UNAUTHORIZED) {});
         } catch (BaseException e) {
@@ -131,6 +129,8 @@ public class UserDetailServiceImpl {
             throw new BaseException(constants.errors.loginError, constants.descriptions.loginError, e) {};
         }
     }
+
+
 
     public MenuDTO setMenuEntityToDTO(MenuItemEntity menuParam) {
         if (menuParam == null) {

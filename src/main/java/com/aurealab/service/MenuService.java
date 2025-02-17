@@ -5,5 +5,5 @@ import com.aurealab.model.aurea.entity.MenuItemEntity;
 import java.util.Set;
 
 public interface MenuService {
-    public Set<MenuItemEntity> getMenuByRole(String role);
+    public Set<MenuItemEntity> getMenuByRoleName(String role);
 }

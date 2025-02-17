@@ -9,12 +9,12 @@ import java.util.Set;
 
 public interface MenuRepository extends JpaRepository<MenuItemEntity, Long> {
 
-    @Query(value="select  menus.* from kaizen_menuroles menuroles " +
-            "inner join kaizen_menus menus " +
+    @Query(value="select  menus.* from menu_roles menuroles " +
+            "inner join menus menus " +
             "on menus.id = menuroles.menu_id " +
-            "inner join kaizen_roles roles " +
+            "inner join roles roles " +
             "on roles.id = menuroles.role_id " +
-            "where roles.validator = :role" , nativeQuery = true)
-    Set<MenuItemEntity> findByRoleId(@Param("role") String role);
+            "where roles.role_name = :role" , nativeQuery = true)
+    Set<MenuItemEntity> findByRoleName(@Param("role") String role);
 
 }

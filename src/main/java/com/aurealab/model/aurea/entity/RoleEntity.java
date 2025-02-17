@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Builder
 @Data
-@Table(name = "kaizen_roles") // Correcto
+@Table(name = "roles") // Correcto
 public class RoleEntity {
     @Id
     @Column(name = "id")
@@ -23,9 +23,6 @@ public class RoleEntity {
 
     @Column(name = "role")
     private String role;
-
-    @Column(name = "validator")
-    private String validator;
 
     @Column(name = "description")
     private String rolDescription;
@@ -37,7 +34,7 @@ public class RoleEntity {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "kaizen_rolepermission", // Correcto
+            name = "role_permission", // Correcto
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )

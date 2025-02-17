@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Data
-@Table(name = "kaizen_configparams")
+@Table(name = "configparams")
 public class ConfigParamsEntity {
 
     @Id

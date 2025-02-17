@@ -32,6 +32,7 @@ public class constants {
         public static final String invalidUserOrPass = "Usuario o contraseña invalido";
         public static final String dataPersistenceError = "Datos duplicados";
         public static final String invalidRole = "No se encontró ningún rol asociado al validador";
+        public static final String invalidUser = "No se encontró ningún usuario con esas credenciales";
         public static final String invalidMenu = "No se encontró ningún menu asociado al validador";
     }
 
