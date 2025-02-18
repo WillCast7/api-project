@@ -25,7 +25,7 @@ public class SoftwareValidationEntity {
     @Column(nullable = false)
     private boolean status;
 
-    @OneToMany(mappedBy = "softwareValidation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SoftwareValidationDataEntity> data = new ArrayList<>();
+    //@OneToMany(mappedBy = "softwareValidation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    //private List<SoftwareValidationDataEntity> data = new ArrayList<>();
 
 }
