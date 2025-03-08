@@ -22,9 +22,9 @@ public class SoftwareValidationDataEntity {
 
     private Boolean meets;
 
-    @ManyToOne
-    @JoinColumn(name = "softwarevalidation_code", referencedColumnName = "code")
-    private SoftwareValidationEntity softwareValidation;
+
+    @Column(name = "softwarevalidation_code")
+    private String softwareValidationCode;
 
     @OneToMany(mappedBy = "softwareValidationData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SoftwareValidationMultimediaEntity> multimedia = new ArrayList<>();

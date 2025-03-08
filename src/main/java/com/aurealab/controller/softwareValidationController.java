@@ -13,13 +13,13 @@ import javax.swing.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/dog")
+@RequestMapping("/documental/validaciondesoftware")
 public class softwareValidationController {
 
     @Autowired
     SoftwareValidationService softwareValidationService;
 
-    @GetMapping("/validaciondesoftware")
+    @GetMapping
     public ResponseEntity<APIResponseDTO<Set<SoftwareValidationEntity>>> getRules(){
 
         return softwareValidationService.getSoftwareValidation();

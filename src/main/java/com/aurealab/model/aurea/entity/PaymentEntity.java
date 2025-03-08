@@ -15,25 +15,25 @@ import java.util.Date;
 @Entity
 @Builder
 @Data
-@Table(name = "payments")
-public class PaymentEntity {
+    @Table(name = "payments")
+    public class PaymentEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false) // Clave foránea
-    private CompaniesEntity company;
+        @ManyToOne
+        @JoinColumn(name = "company_id", nullable = false) // Clave foránea
+        private CompaniesEntity company;
 
-    private BigDecimal amount;
+        private BigDecimal amount;
 
-    @Column(name = "payment_date")
-    private LocalDateTime paymentDate;
+        @Column(name = "payment_date")
+        private LocalDateTime paymentDate;
 
-    @Column(name = "payment_status")
-    private String paymentStatus;
+        @Column(name = "payment_status")
+        private String paymentStatus;
 
-    @Column(name = "transaction_id")
-    private String transactionId;
-}
+        @Column(name = "transaction_id")
+        private String transactionId;
+    }

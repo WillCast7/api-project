@@ -72,11 +72,16 @@ public class UserDetailServiceImpl {
         System.out.println(userLogin.password());
         // Validar credenciales
         System.out.println("password encoded");
-        System.out.println(passwordEncoder.encode(userLogin.password()));
+        String passwordEncode = passwordEncoder.encode(userLogin.password());
+        System.out.println(passwordEncode);
 
-        UserEntity userEntity = validateCredentials(userLogin.username(), passwordEncoder.encode(userLogin.password()));
+        UserEntity userEntity = validateCredentials(userLogin.username());
+
+        System.out.println("userEntity");
+        System.out.println(userEntity);
+
         if (!passwordEncoder.matches(userLogin.password(), userEntity.getPassword())) {
-            throw new BadCredentialsException("Incorrect Password");
+            throw new BaseException(constants.errors.loginError, constants.descriptions.loginError) {};
         }
 
         try {
@@ -112,9 +117,7 @@ public class UserDetailServiceImpl {
      * Valida las credenciales del usuario en la base de datos.
      */
     @Transactional("aureaTrxManager")
-    public UserEntity validateCredentials(String username, String password) {
-        System.out.println("password");
-        System.out.println(password);
+    public UserEntity validateCredentials(String username) {
         try {
             return userRepository.findByUserNameOrEmail(username, username)
                     .orElseThrow(() -> new BaseException(

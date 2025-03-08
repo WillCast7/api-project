@@ -3,6 +3,7 @@ package com.aurealab.model.aurea.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,13 @@ public class SoftwareValidationEntity {
 
     private String description;
 
+    private String father;
+
     @Column(nullable = false)
     private boolean status;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     //@OneToMany(mappedBy = "softwareValidation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //private List<SoftwareValidationDataEntity> data = new ArrayList<>();
