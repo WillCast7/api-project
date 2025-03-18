@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Builder
 @Data
-@Table(name = "software_validation") // Correcto
+@Table(name = "5365") // Correcto
 public class SoftwareValidationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +30,11 @@ public class SoftwareValidationEntity {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    private String type;// title, subtitle, comentary, item
+
+    @Column(name = "order")
+    private Integer orderValue;
 
     //@OneToMany(mappedBy = "softwareValidation", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //private List<SoftwareValidationDataEntity> data = new ArrayList<>();
